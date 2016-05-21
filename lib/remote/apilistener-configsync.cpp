@@ -116,7 +116,7 @@ Value ApiListener::ConfigUpdateObjectAPIHandler(const MessageOrigin::Ptr& origin
 		Array::Ptr errors = new Array();
 
 		if (!ConfigObjectUtility::CreateObject(Type::GetByName(objType),
-		    objName, config, errors)) {
+		    objName, config, endpoint->GetZone()->GetName(), errors)) {
 			Log(LogCritical, "ApiListener")
 			    << "Could not create object '" << objName << "':";
 
@@ -295,7 +295,7 @@ void ApiListener::UpdateConfigObject(const ConfigObject::Ptr& object, const Mess
 	params->Set("version", object->GetVersion());
 
 	if (object->GetPackage() == "_api") {
-		String file = ConfigObjectUtility::GetObjectConfigPath(object->GetReflectionType(), object->GetName());
+		String file = ConfigObjectUtility::GetObjectConfigPath(object->GetReflectionType(), object->GetName(), object->GetZoneName());
 
 		std::ifstream fp(file.CStr(), std::ifstream::binary);
 		if (!fp)

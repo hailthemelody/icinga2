@@ -184,7 +184,7 @@ String Comment::AddComment(const Checkable::Ptr& checkable, CommentType entryTyp
 
 	Array::Ptr errors = new Array();
 
-	if (!ConfigObjectUtility::CreateObject(Comment::TypeInstance, fullName, config, errors)) {
+	if (!ConfigObjectUtility::CreateObject(Comment::TypeInstance, fullName, config, zone, errors)) {
 		ObjectLock olock(errors);
 		BOOST_FOREACH(const String& error, errors) {
 			Log(LogCritical, "Comment", error);

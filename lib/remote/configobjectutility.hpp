@@ -39,13 +39,14 @@ class I2_REMOTE_API ConfigObjectUtility
 
 public:
 	static String GetConfigDir(void);
-	static String GetObjectConfigPath(const Type::Ptr& type, const String& fullName);
+	static String GetObjectConfigPath(const Type::Ptr& type, const String& fullName,
+	    const String& zoneName);
 
 	static String CreateObjectConfig(const Type::Ptr& type, const String& fullName,
 	     bool ignoreOnError, const Array::Ptr& templates, const Dictionary::Ptr& attrs);
 
 	static bool CreateObject(const Type::Ptr& type, const String& fullName,
-	     const String& config, const Array::Ptr& errors);
+	     const String& config, const String& zoneName, const Array::Ptr& errors);
 
 	static bool DeleteObject(const ConfigObject::Ptr& object, bool cascade, const Array::Ptr& errors);
 

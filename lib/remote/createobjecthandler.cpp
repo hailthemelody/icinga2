@@ -97,7 +97,8 @@ bool CreateObjectHandler::HandleRequest(const ApiUser::Ptr& user, HttpRequest& r
 		return true;
 	}
 
-	if (!ConfigObjectUtility::CreateObject(type, name, config, errors)) {
+	/* Pass the zone name to ensure the object is created in zones.d package directory. */
+	if (!ConfigObjectUtility::CreateObject(type, name, config, localZoneName, errors)) {
 		result1->Set("errors", errors);
 		result1->Set("code", 500);
 		result1->Set("status", "Object could not be created.");

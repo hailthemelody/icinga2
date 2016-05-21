@@ -232,7 +232,7 @@ String Downtime::AddDowntime(const Checkable::Ptr& checkable, const String& auth
 
 	Array::Ptr errors = new Array();
 
-	if (!ConfigObjectUtility::CreateObject(Downtime::TypeInstance, fullName, config, errors)) {
+	if (!ConfigObjectUtility::CreateObject(Downtime::TypeInstance, fullName, config, zone, errors)) {
 		ObjectLock olock(errors);
 		BOOST_FOREACH(const String& error, errors) {
 			Log(LogCritical, "Downtime", error);

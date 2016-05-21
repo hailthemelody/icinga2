@@ -38,12 +38,18 @@ String ConfigObjectUtility::GetConfigDir(void)
 	    ConfigPackageUtility::GetActiveStage("_api");
 }
 
-String ConfigObjectUtility::GetObjectConfigPath(const Type::Ptr& type, const String& fullName)
+String ConfigObjectUtility::GetObjectConfigPath(const Type::Ptr& type,
+    const String& fullName, const String& zoneName)
 {
 	String typeDir = type->GetPluralName();
 	boost::algorithm::to_lower(typeDir);
 
-	return GetConfigDir() + "/conf.d/" + typeDir +
+	String configDir = "conf.d";
+
+	if (!zoneName.IsEmpty())
+		configDir = "zones.d/" + zoneName;
+
+	return GetConfigDir() + "/" + configDir + "/" + typeDir +
 	    "/" + EscapeName(fullName) + ".conf";
 }
 
@@ -100,7 +106,7 @@ String ConfigObjectUtility::CreateObjectConfig(const Type::Ptr& type, const Stri
 }
 
 bool ConfigObjectUtility::CreateObject(const Type::Ptr& type, const String& fullName,
-    const String& config, const Array::Ptr& errors)
+    const String& config, const String& zoneName, const Array::Ptr& errors)
 {
 	if (!ConfigPackageUtility::PackageExists("_api")) {
 		ConfigPackageUtility::CreatePackage("_api");
@@ -109,7 +115,7 @@ bool ConfigObjectUtility::CreateObject(const Type::Ptr& type, const String& full
 		ConfigPackageUtility::ActivateStage("_api", stage);
 	}
 
-	String path = GetObjectConfigPath(type, fullName);
+	String path = GetObjectConfigPath(type, fullName, zoneName);
 	Utility::MkDirP(Utility::DirName(path), 0700);
 
 	if (Utility::PathExists(path)) {
@@ -214,7 +220,7 @@ bool ConfigObjectUtility::DeleteObjectHelper(const ConfigObject::Ptr& object, bo
 		return false;
 	}
 
-	String path = GetObjectConfigPath(object->GetReflectionType(), object->GetName());
+	String path = GetObjectConfigPath(object->GetReflectionType(), object->GetName(), object->GetZoneName());
 
 	if (Utility::PathExists(path)) {
 		if (unlink(path.CStr()) < 0) {
